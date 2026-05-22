@@ -10,6 +10,7 @@ import { markReviewAsHelpful } from '../../firebase/update_helpful';
 import { auth } from '../../firebaseConfig';
 import { addComment } from '../../firebase/add_comment';
 import { subscribeToComments, ReviewComment } from '../../firebase/get_comment';
+import { deletePost } from '../../firebase/delete_post';
 
 export default function ReviewDetailPage() {
   const { slug } = useLocalSearchParams();
@@ -84,6 +85,16 @@ export default function ReviewDetailPage() {
     }
   };
 
+  const handleDeletePost = async () => {
+    if (!post) return;
+    try {
+      await deletePost(post.id);
+      router.replace('/');
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
   useEffect(() => {
     if (slug) {
       getPostById(slug as string)
@@ -153,6 +164,20 @@ export default function ReviewDetailPage() {
             👍 Avis pertinent ({post.helpfulCount || 0})
           </Text>
         </Pressable>
+        {auth.currentUser?.uid === post.authorId && (
+
+  <Pressable
+    style={styles.deleteButton}
+    onPress={handleDeletePost}
+  >
+
+    <Text style={styles.deleteButtonText}>
+      Supprimer la critique
+    </Text>
+
+  </Pressable>
+
+)}
         <Text style={styles.commentsTitle}> 💬 {post.commentsCount || 0} Commentaires </Text>
 
         <TextInput
@@ -205,4 +230,6 @@ const styles = StyleSheet.create({
   commentAuthor: { fontWeight: 'bold', marginBottom: 5 },
   commentContent: { color: Colors.text },
   ratingContainer: { flexDirection: 'row', marginBottom: 6, gap: 1, alignItems: 'center' },
+  deleteButton: { marginTop: 20, backgroundColor: Colors.danger, padding: 12, borderRadius: 8, alignItems: 'center' },
+  deleteButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });

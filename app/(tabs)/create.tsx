@@ -32,7 +32,7 @@ export default function AjouterPostPage() {
       setUploadingImage(true);
       try {
         const uri = result.assets[0].uri;
-        const fileName = `avatars/${user.uid}_${Date.now()}.jpg`;
+        const fileName = `reviews/${user.uid}_${Date.now()}.jpg`;
         const downloadURL = await uploadFileAndGetURL(uri, fileName);
         
         setImage(downloadURL);
