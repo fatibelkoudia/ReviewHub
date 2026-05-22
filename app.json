@@ -31,7 +31,7 @@
       "favicon": "./assets/favicon.png"
     },
     "experiments": {
-      "baseUrl": "/web-cloud-ynov"
+      "baseUrl": "/ReviewHub"
     },
     "extra": {
       "eas": {
