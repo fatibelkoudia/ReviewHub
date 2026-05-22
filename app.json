@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "web-cloud-ynov",
-    "slug": "web-cloud-ynov",
-    "scheme": "web-cloud-ynov",
+    "name": "ReviewHub",
+    "slug": "ReviewHub",
+    "scheme": "ReviewHub",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.tima101.webcloudynov",
+      "package": "com.tima101.ReviewHub",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
@@ -35,8 +35,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "7a682dbe-a8cf-48c3-ae52-768600148f7f"
-      }
+        "projectId": "6431a108-2751-4d47-a05c-dd0992fb3e8c"
+      },
+      "router": {}
     },
     "owner": "tima101",
     "plugins": [
