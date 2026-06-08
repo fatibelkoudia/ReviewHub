@@ -1,14 +1,14 @@
 import { View, Text, TextInput, Pressable, StyleSheet, Alert, ScrollView, ActivityIndicator, Image } from 'react-native';
-import { useState, useEffect, use } from 'react';
-import { useRouter } from 'expo-router';
+import { useState, useEffect } from 'react';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
-import { addReviewPost } from '../../firebase/add_post_review';
 import { CommonStyles, Colors } from '../../constants/Theme';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadFileAndGetURL } from '../../firebase/storage_upload_file';
-import { useLocalSearchParams } from 'expo-router';
 import { getPostById } from '../../firebase/get_single_post';
+import { updatePost } from '../../firebase/update_post';
+
 
 export default function AjouterPostPage() {
     const [title, setTitle] = useState('');
@@ -60,14 +60,27 @@ export default function AjouterPostPage() {
             if (!data) return;
             setTitle(data.title);
             setContent(data.content);
-            setRating(data.rating);
+            setRating(data.rating.toString());
             setImage(data.image);
-            });
+            })
+            .catch((error) => {
+            Alert.alert('Erreur', 'Impossible de charger la critique : ' + error.message);
+            })
+            .finally(() => setLoading(false));
         }
     }, [slug]);
 
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(
+        auth,
+        (currentUser) => {
+          setUser(currentUser);
+        }
+      );
+      return () => unsubscribe();
+    }, []);
+
   const handleSubmit = async () => {
-    console.log("Publish button clicked");
     if (!title.trim() || !content.trim() || !rating.trim() || !image.trim()) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
@@ -78,23 +91,17 @@ export default function AjouterPostPage() {
       return;
     }
 
-    setSending(true);
     try {
-      console.log("Attempting to add post to Firestore...");
-      const postId = await addReviewPost(title, content, rating, image, user.uid, user.displayName || 'Anonyme');
-      console.log("Post successfully created with ID:", postId);
-      
-      Alert.alert('Succès', 'Votre critique a été publiée !');
-      
-      // Reset form
-      setTitle('');
-      setContent('');
-      setRating('0');
-      // Redirect to home
-      console.log("Redirecting to home page...");
-      router.replace('/');
+      setSending(true);
+      await updatePost(
+        slug as string,
+        {
+          title, content, rating: Number(rating), image,
+        });
+
+      Alert.alert('Succès', 'Votre critique a été mise à jour !');
+      router.replace(`/blog/${slug}`);
     } catch (error: any) {
-      console.error("Error during post publication:", error);
       Alert.alert('Erreur', 'Impossible de publier la critique : ' + error.message);
     } finally {
       setSending(false);
@@ -113,7 +120,7 @@ export default function AjouterPostPage() {
 
   return (
     <ScrollView contentContainerStyle={CommonStyles.container}>
-      <Text style={CommonStyles.title}>Nouvelle critique</Text>
+      <Text style={CommonStyles.title}>Modifier la critique</Text>
       
       <View style={CommonStyles.card}>
         <Text style={CommonStyles.label}>Titre de l'oeuvre</Text>
@@ -169,7 +176,7 @@ export default function AjouterPostPage() {
           onPress={handleSubmit}
           disabled={sending}
         >
-          <Text style={CommonStyles.buttonText}>{sending ? 'Publication...' : 'Publier la critique'}</Text>
+          <Text style={CommonStyles.buttonText}>{sending ? 'Mise à jour...' : 'Modifier la critique'}</Text>
         </Pressable>
       </View>
     </ScrollView>
