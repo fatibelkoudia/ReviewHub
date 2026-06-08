@@ -39,7 +39,7 @@
       },
       "router": {}
     },
-    "owner": "reviewhub2",
+    "owner": "tima101",
     "plugins": [
       "expo-router",
       [
@@ -48,7 +48,17 @@
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos and videos"
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/notification-sound.wav"
+          ]
+        }
+      ]
     ]
   }
 }
