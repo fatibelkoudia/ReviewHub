@@ -144,7 +144,7 @@ export default function ReviewDetailPage() {
     return (
       <View style={CommonStyles.center}>
         <Text style={styles.errorText}>Critique introuvable.</Text>
-        <Pressable style={[CommonStyles.button, CommonStyles.buttonPrimary]} onPress={() => router.back()}>
+        <Pressable style={[CommonStyles.button, CommonStyles.buttonPrimary]} onPress={() => router.push('/')}>
           <Text style={CommonStyles.buttonText}>Retour</Text>
         </Pressable>
       </View>
@@ -153,7 +153,7 @@ export default function ReviewDetailPage() {
 
   return (
     <ScrollView style={CommonStyles.container} contentContainerStyle={{ paddingBottom: 40 }}>
-      <Pressable style={styles.backButton} onPress={() => router.back()}>
+      <Pressable style={styles.backButton} onPress={() => router.push('/')}>
         <Ionicons name="arrow-back" size={24} color={Colors.primary} />
         <Text style={styles.backText}>Retour</Text>
       </Pressable>
@@ -182,7 +182,7 @@ export default function ReviewDetailPage() {
         <Text style={styles.content}>{post.content}</Text>
         <Pressable style={styles.helpfulButton} onPress={handleHelpful}>
           <Text style={styles.helpfulText}>
-            👍 Avis pertinent ({post.helpfulCount || 0})
+             Avis pertinent ({post.helpfulCount || 0})
           </Text>
         </Pressable>
         {auth.currentUser?.uid === post.authorId && (
@@ -202,7 +202,7 @@ export default function ReviewDetailPage() {
             </Pressable>
           </view>
         )}
-        <Text style={styles.commentsTitle}> 💬 {post.commentsCount || 0} Commentaires </Text>
+        <Text style={styles.commentsTitle}> {post.commentsCount || 0} Commentaires </Text>
 
         <TextInput
           style={styles.commentInput}

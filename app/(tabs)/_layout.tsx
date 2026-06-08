@@ -3,18 +3,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { useEffect, useState } from 'react';
-import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 import { registerPushToken } from '../../firebase/notification';
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
 
 export default function TabsLayout() {
   const [user, setUser] = useState<User | null>(null);
