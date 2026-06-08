@@ -45,11 +45,6 @@ export default function AjouterPostPage() {
     }
   };
 
-  if (numericRating < 0 || numericRating > 5) {
-    Alert.alert('Erreur', 'La note doit être entre 0 et 5.');
-    return;
-  }
-
   useEffect(() => {
     console.log("Checking auth state for AjouterPost...");
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -64,7 +59,11 @@ export default function AjouterPostPage() {
   }, [loading]);
 
   const handleSubmit = async () => {
-    console.log("Publish button clicked");
+    if (numericRating < 0 || numericRating > 5) {
+      Alert.alert('Erreur', 'La note doit être entre 0 et 5.');
+      return;
+    }
+
     if (!title.trim() || !content.trim() || !rating.trim() || !image.trim()) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
@@ -156,7 +155,7 @@ export default function AjouterPostPage() {
         <Text style={CommonStyles.label}>Note sur 5</Text>
         <TextInput
           style={CommonStyles.input}
-          placeholder="Ex: 4"
+          placeholder="Entrez une note de 0 à 5"
           value={rating}
           onChangeText={setRating}
           keyboardType="numeric"

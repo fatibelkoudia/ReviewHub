@@ -48,11 +48,6 @@ export default function AjouterPostPage() {
         }
     };
 
-    if (numericRating < 0 || numericRating > 5) {
-        Alert.alert('Erreur', 'La note doit être entre 0 et 5.');
-        return;
-    }
-
     useEffect(() => {
         if (slug) {
         getPostById(slug as string)
@@ -81,6 +76,10 @@ export default function AjouterPostPage() {
     }, []);
 
   const handleSubmit = async () => {
+     if (numericRating < 0 || numericRating > 5) {
+      Alert.alert('Erreur', 'La note doit être entre 0 et 5.');
+      return;
+    }
     if (!title.trim() || !content.trim() || !rating.trim() || !image.trim()) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
@@ -166,7 +165,7 @@ export default function AjouterPostPage() {
         <Text style={CommonStyles.label}>Note sur 5</Text>
         <TextInput
           style={CommonStyles.input}
-          placeholder="Ex: 4"
+          placeholder="Entrez une note de 0 à 5"
           value={rating}
           onChangeText={setRating}
           keyboardType="numeric"
