@@ -3,12 +3,30 @@ import { Ionicons } from '@expo/vector-icons';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { useEffect, useState } from 'react';
+import * as Notifications from 'expo-notifications';
+import { registerPushToken } from '../../firebase/notification';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 export default function TabsLayout() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        // Enregistrer le token de notification pour l'utilisateur connecté
+        registerPushToken(currentUser.uid).catch((error) => {
+          console.error('Error registering push token:', error);
+        });
+      }
       setUser(currentUser);
     });
     return () => unsubscribe();

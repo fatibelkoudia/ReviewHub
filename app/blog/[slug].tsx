@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable, TextInput, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { getPostById } from '../../firebase/get_single_post';
@@ -10,6 +10,7 @@ import { markReviewAsHelpful } from '../../firebase/update_helpful';
 import { auth } from '../../firebaseConfig';
 import { addComment } from '../../firebase/add_comment';
 import { subscribeToComments, ReviewComment } from '../../firebase/get_comment';
+import { deletePost } from '../../firebase/delete_post';
 
 export default function ReviewDetailPage() {
   const { slug } = useLocalSearchParams();
@@ -84,6 +85,37 @@ export default function ReviewDetailPage() {
     }
   };
 
+  const confirmDelete = () => {
+
+    Alert.alert(
+      "Supprimer la critique",
+      "Êtes-vous sûr de vouloir supprimer cette critique ?",
+      [
+        {
+          text: "Annuler",
+          style: "cancel",
+        },
+
+        {
+          text: "Supprimer",
+          style: "destructive",
+          onPress: handleDeletePost,
+        },
+      ]
+    );
+  };
+
+
+  const handleDeletePost = async () => {
+    if (!post) return;  
+      try {
+        await deletePost(post.id);
+        router.replace('/');
+      } catch(error) {
+        console.error(error);
+      }   
+  };
+
   useEffect(() => {
     if (slug) {
       getPostById(slug as string)
@@ -153,6 +185,23 @@ export default function ReviewDetailPage() {
             👍 Avis pertinent ({post.helpfulCount || 0})
           </Text>
         </Pressable>
+        {auth.currentUser?.uid === post.authorId && (
+          <view>
+            <Pressable style={styles.deleteButton}
+              onPress={handleDeletePost}
+            >
+            <Text style={styles.deleteButtonText}> Supprimer la critique </Text>
+            </Pressable>
+          
+            <Pressable style={styles.editButton}
+              onPress={() =>
+                router.push(`/edit/${post.id}`)
+              }
+            >
+            <Text style={styles.editButtonText}> Modifier la critique </Text>
+            </Pressable>
+          </view>
+        )}
         <Text style={styles.commentsTitle}> 💬 {post.commentsCount || 0} Commentaires </Text>
 
         <TextInput
@@ -205,4 +254,8 @@ const styles = StyleSheet.create({
   commentAuthor: { fontWeight: 'bold', marginBottom: 5 },
   commentContent: { color: Colors.text },
   ratingContainer: { flexDirection: 'row', marginBottom: 6, gap: 1, alignItems: 'center' },
+  deleteButton: { marginTop: 20, backgroundColor: Colors.danger, padding: 12, borderRadius: 8, alignItems: 'center' },
+  deleteButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  editButton: { marginTop: 20, backgroundColor: Colors.secondary, padding: 12, borderRadius: 8, alignItems: 'center' },
+  editButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });
