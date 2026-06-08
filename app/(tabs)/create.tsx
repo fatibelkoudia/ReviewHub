@@ -7,6 +7,7 @@ import { addReviewPost } from '../../firebase/add_post_review';
 import { CommonStyles, Colors } from '../../constants/Theme';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadFileAndGetURL } from '../../firebase/storage_upload_file';
+import { notifyAllUsers } from '../../firebase/notification';
 
 export default function AjouterPostPage() {
   const [title, setTitle] = useState('');
@@ -78,6 +79,7 @@ export default function AjouterPostPage() {
     try {
       console.log("Attempting to add post to Firestore...");
       const postId = await addReviewPost(title, content, rating, image, user.uid, user.displayName || 'Anonyme');
+      await notifyAllUsers('Nouvelle publication', `Découvrez la critique de ${user.displayName || 'un utilisateur'} sur "${title}" !`);
       console.log("Post successfully created with ID:", postId);
       
       Alert.alert('Succès', 'Votre critique a été publiée !');
