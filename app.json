@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "web-cloud-ynov",
-    "slug": "web-cloud-ynov",
+    "slug": "ReviewHub",
     "scheme": "web-cloud-ynov",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -35,10 +35,10 @@
     },
     "extra": {
       "eas": {
-        "projectId": "7a682dbe-a8cf-48c3-ae52-768600148f7f"
+        "projectId": "6431a108-2751-4d47-a05c-dd0992fb3e8c"
       }
     },
-    "owner": "tima101",
+    "owner": "reviewhub2",
     "plugins": [
       "expo-router",
       [
